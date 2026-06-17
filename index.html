@@ -4,31 +4,197 @@
   <meta charset="UTF-8">
   <title>工作紀錄選單</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-    button { margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
-    #output { white-space: pre-line; margin-top: 30px; font-size: 16px; text-align: left; display: inline-block; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #f0f4f8, #d9e4f5);
+      margin: 0;
+      padding: 0;
+    }
+    h2 {
+      text-align: center;
+      margin: 20px;
+      color: #2c3e50;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 20px;
+      gap: 20px;
+    }
+    .section {
+      flex: 1;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .btn {
+      margin: 8px;
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #3498db;
+      color: #fff;
+      transition: 0.3s;
+      display: inline-block;
+    }
+    .btn:hover {
+      background: #2980b9;
+    }
+    .btn-secondary {
+      background: #2ecc71;
+    }
+    .btn-secondary:hover {
+      background: #27ae60;
+    }
+    input {
+      margin: 10px;
+      padding: 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 120px;
+      text-align: center;
+    }
+    #output {
+      white-space: pre-line;
+      font-size: 16px;
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      min-height: 200px;
+    }
+    /* 手機排版 (iPhone 15 Pro Max) */
+    @media (max-width: 430px) {
+      .container {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;   /* 手機上按鈕全寬 */
+      }
+      input {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
-  <h2>工作紀錄選單</h2>
-  <p>請選擇日期模式：</p>
-  
-  <button onclick="showRecord('06/10')">06/10</button>
-  <button onclick="showRecord('06/15')">06/15</button>
-  <button onclick="showRecord('06/16')">06/16</button>
-  <button onclick="showRecord('06/17')">06/17</button>
+  <h2>📋 工作紀錄選單</h2>
 
-  <div id="output"></div>
+  <div class="container">
+    <!-- 左邊：模式選擇 + 加班時數 -->
+    <div class="section">
+      <h3>選擇模式</h3>
+      <button class="btn" onclick="setMode('F18')">F18</button>
+      <button class="btn" onclick="setMode('AP8')">AP8</button>
+      <button class="btn" onclick="setMode('工務所')">工務所</button>
+      <button class="btn btn-secondary" onclick="setMode('請假')">請假</button>
+
+      <h3>選擇加班時數</h3>
+      <button class="btn" onclick="setOvertime(0)">0</button>
+      <button class="btn" onclick="setOvertime(0.5)">0.5</button>
+      <button class="btn" onclick="setOvertime(1)">1</button>
+      <button class="btn" onclick="setOvertime(1.5)">1.5</button>
+      <button class="btn" onclick="setOvertime(2)">2</button>
+      <br>
+      <input type="number" step="0.5" id="customOvertime" placeholder="自訂">
+      <button class="btn btn-secondary" onclick="setCustomOvertime()">設定</button>
+    </div>
+
+    <!-- 右邊：輸出內容 -->
+    <div class="section">
+      <h3>輸出紀錄</h3>
+      <div id="output"></div>
+    </div>
+  </div>
 
   <script>
-    function showRecord(date) {
-      let records = {
-        "06/10": "姓名 : 方建豪\n日期 : 06/10\n時間 : 07:00-16:00(指紋機時間)\n加班時間：0\n出工地點：工務所/有\n製番:8V01254\n工作內容 : SI",
-        "06/15": "姓名 : 方建豪\n日期 : 06/15\n時間 : 07:00-18:00(指紋機時間)\n加班時間：1\n出工地點：F18/有\n製番:8V01254\n工作內容 : SI",
-        "06/16": "姓名 : 方建豪\n日期 : 06/16\n時間 : 06:55-16:06(指紋機時間)\n加班時間：0\n出工地點：AP8/有\n製番:8V01254\n工作內容 : SI",
-        "06/17": "姓名 : 方建豪\n日期 : 06/17\n假別：病假\n請假理由：感冒\n製番:8V01254\n工作內容 : SI"
-      };
-      document.getElementById("output").textContent = records[date];
+    let overtime = null; // 加班時數
+    let mode = null;     // 工作模式
+
+    function setOvertime(hours) {
+      overtime = hours;
+      generateRecord();
+    }
+
+    function setCustomOvertime() {
+      let val = parseFloat(document.getElementById("customOvertime").value);
+      if (!isNaN(val)) {
+        overtime = val;
+        alert("加班時數已設定為 " + val);
+        generateRecord();
+      } else {
+        alert("請輸入有效數字");
+      }
+    }
+
+    function setMode(selectedMode) {
+      mode = selectedMode;
+      generateRecord();
+    }
+
+    // 取得今天日期 (MM/DD 格式)
+    function getTodayDate() {
+      let today = new Date();
+      let month = String(today.getMonth() + 1).padStart(2, '0');
+      let day = String(today.getDate()).padStart(2, '0');
+      return month + "/" + day;
+    }
+
+    // 計算結束時間：原本結束時間 + 加班時數
+    // 若結束時間 >= 17:01，需再加 30 分鐘
+    function calculateEndTime(baseEnd, overtime) {
+    let [h, m] = baseEnd.split(":").map(Number);
+    let totalMinutes = h * 60 + m + (overtime * 60); // 加班時數換算成分鐘
+    let newH = Math.floor(totalMinutes / 60);
+    let newM = totalMinutes % 60;
+
+    // 判斷是否 >= 17:01
+    let endMinutes = newH * 60 + newM;
+    let threshold = 17 * 60 + 1; // 17:01 → 1021 分鐘
+
+    if (endMinutes >= threshold) {
+        endMinutes += 30; // 再加半小時
+        newH = Math.floor(endMinutes / 60);
+        newM = endMinutes % 60;
+    }
+
+    return String(newH).padStart(2, '0') + ":" + String(newM).padStart(2, '0');
+    }
+
+    function generateRecord() {
+      if (!mode || (mode !== "請假" && overtime === null)) {
+        return; // 必須兩者都選才會生成
+      }
+
+      let date = getTodayDate();
+      let record = "";
+
+      if (mode === "F18") {
+        let endTime = calculateEndTime("16:30", overtime);
+        record = `姓名：方建豪\n日期：${date}\n時間：07:00-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：F18/有\n製番：8V01254\n工作內容：SI`;
+      } else if (mode === "AP8") {
+        let endTime = calculateEndTime("16:06", overtime);
+        record = `姓名：方建豪\n日期：${date}\n時間：06:55-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：AP8/有\n製番：8V01254\n工作內容：SI`;
+      } else if (mode === "工務所") {
+        let endTime = calculateEndTime("16:00", overtime);
+        record = `姓名：方建豪\n日期：${date}\n時間：07:00-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：工務所/有\n製番：8V01254\n工作內容：SI`;
+      } else if (mode === "請假") {
+        record = `姓名：方建豪\n日期：${date}\n假別：病假\n請假理由：感冒\n製番：8V01254\n工作內容：SI`;
+      }
+
+      document.getElementById("output").textContent = record;
+
+      // 一鍵複製
+      navigator.clipboard.writeText(record).then(() => {
+        alert("已複製到剪貼簿，可以直接貼到 LINE！");
+      }).catch(err => {
+        console.error("複製失敗：", err);
+      });
     }
   </script>
 </body>
