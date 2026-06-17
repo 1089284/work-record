@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>工作紀錄選單</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    button { margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    #output { white-space: pre-line; margin-top: 30px; font-size: 16px; text-align: left; display: inline-block; }
+  </style>
+</head>
+<body>
+  <h2>工作紀錄選單</h2>
+  <p>請選擇日期模式：</p>
+  
+  <button onclick="showRecord('06/10')">06/10</button>
+  <button onclick="showRecord('06/15')">06/15</button>
+  <button onclick="showRecord('06/16')">06/16</button>
+  <button onclick="showRecord('06/17')">06/17</button>
+
+  <div id="output"></div>
+
+  <script>
+    function showRecord(date) {
+      let records = {
+        "06/10": "姓名 : 方建豪\n日期 : 06/10\n時間 : 07:00-16:00(指紋機時間)\n加班時間：0\n出工地點：工務所/有\n製番:8V01254\n工作內容 : SI",
+        "06/15": "姓名 : 方建豪\n日期 : 06/15\n時間 : 07:00-18:00(指紋機時間)\n加班時間：1\n出工地點：F18/有\n製番:8V01254\n工作內容 : SI",
+        "06/16": "姓名 : 方建豪\n日期 : 06/16\n時間 : 06:55-16:06(指紋機時間)\n加班時間：0\n出工地點：AP8/有\n製番:8V01254\n工作內容 : SI",
+        "06/17": "姓名 : 方建豪\n日期 : 06/17\n假別：病假\n請假理由：感冒\n製番:8V01254\n工作內容 : SI"
+      };
+      document.getElementById("output").textContent = records[date];
+    }
+  </script>
+</body>
+</html>
