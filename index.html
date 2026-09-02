@@ -89,6 +89,7 @@
     <!-- 左邊：模式選擇 + 加班時數 -->
     <div class="section">
       <h3>選擇模式</h3>
+      <button class="btn" onclick="setMode('on site')">on site</button>
       <button class="btn" onclick="setMode('F18')">F18</button>
       <button class="btn" onclick="setMode('AP8')">AP8</button>
       <button class="btn" onclick="setMode('工務所')">工務所</button>
@@ -177,6 +178,9 @@
       if (mode === "F18") {
         let endTime = calculateEndTime("16:06", overtime);
         record = `姓名：方建豪\n日期：${date}\n時間：06:55-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：F18/有\n製番：8D01250\n工作內容：SI`;
+      } else if (mode === "on site") {
+        let endTime = calculateEndTime("16:36", overtime);
+        record = `姓名：方建豪\n日期：${date}\n時間：07:25-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：F18/有\n製番：8D01250\n工作內容：SI`;
       } else if (mode === "AP8") {
         let endTime = calculateEndTime("16:06", overtime);
         record = `姓名：方建豪\n日期：${date}\n時間：06:55-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：AP8/有\n製番：8D01250\n工作內容：SI`;
