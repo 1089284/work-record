@@ -142,7 +142,7 @@
       let today = new Date();
       let month = String(today.getMonth() + 1).padStart(2, '0');
       let day = String(today.getDate()).padStart(2, '0');
-      return month + "/" + day;
+      return "115" + "/" + month + "/" + day;
     }
 
     // 計算結束時間：原本結束時間 + 加班時數
@@ -175,26 +175,26 @@
       let record = "";
 
       if (mode === "F18") {
-        let endTime = calculateEndTime("16:00", overtime);
-        record = `姓名：方建豪\n日期：${date}\n時間：07:00-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：F18/有\n製番：8D01250\n工作內容：SI`;
+        let endTime = calculateEndTime("16:06", overtime);
+        record = `姓名：方建豪\n日期：${date}\n時間：06:55-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：F18/有\n製番：8D01250\n工作內容：SI`;
       } else if (mode === "AP8") {
         let endTime = calculateEndTime("16:06", overtime);
         record = `姓名：方建豪\n日期：${date}\n時間：06:55-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：AP8/有\n製番：8D01250\n工作內容：SI`;
       } else if (mode === "工務所") {
-        let endTime = calculateEndTime("16:00", overtime);
-        record = `姓名：方建豪\n日期：${date}\n時間：07:00-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：工務所/有\n製番：8D01250\n工作內容：SI`;
+        let endTime = calculateEndTime("16:06", overtime);
+        record = `姓名：方建豪\n日期：${date}\n時間：06:55-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：工務所\n製番：8D01250\n工作內容：SI`;
       } else if (mode === "請假") {
         record = `姓名：方建豪\n日期：${date}\n假別：病假\n請假理由：感冒\n製番：8D01250\n工作內容：SI`;
       }
 
       document.getElementById("output").textContent = record;
 
-      // 一鍵複製
-      navigator.clipboard.writeText(record).then(() => {
-        alert("已複製到剪貼簿，可以直接貼到 LINE！");
-      }).catch(err => {
-        console.error("複製失敗：", err);
-      });
+      // // 一鍵複製
+      // navigator.clipboard.writeText(record).then(() => {
+      //   alert("已複製到剪貼簿，可以直接貼到 LINE！");
+      // }).catch(err => {
+      //   console.error("複製失敗：", err);
+      // });
     }
   </script>
 </body>
