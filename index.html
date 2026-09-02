@@ -17,8 +17,11 @@
     }
     .container {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      flex-direction: column; /* 改成上下排列 */
+      justify-content: flex-start;
+      align-items: stretch;
+      /* justify-content: space-between; */
+      /* align-items: flex-start; */
       padding: 20px;
       gap: 20px;
     }
