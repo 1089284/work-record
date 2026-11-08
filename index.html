@@ -102,6 +102,7 @@
       <h3>選擇模式</h3>
       <button class="btn" onclick="setMode('on site')">on site</button>
       <button class="btn" onclick="setMode('F18')">F18</button>
+      <button class="btn" onclick="setMode('F18P9')">F18P9</button>
       <button class="btn" onclick="setMode('AP8')">AP8</button>
       <button class="btn" onclick="setMode('工務所')">工務所</button>
       <button class="btn btn-secondary" onclick="setMode('請假')">請假</button>
@@ -158,16 +159,16 @@
     }
 
     // 計算結束時間：原本結束時間 + 加班時數
-    // 若結束時間 >= 17:01，需再加 30 分鐘
+    // 若結束時間 >= 16:31，需再加 30 分鐘
     function calculateEndTime(baseEnd, overtime) {
     let [h, m] = baseEnd.split(":").map(Number);
     let totalMinutes = h * 60 + m + (overtime * 60); // 加班時數換算成分鐘
     let newH = Math.floor(totalMinutes / 60);
     let newM = totalMinutes % 60;
 
-    // 判斷是否 >= 17:01
+    // 判斷是否 >= 16:31
     let endMinutes = newH * 60 + newM;
-    let threshold = 17 * 60 + 1; // 17:01 → 1021 分鐘
+    let threshold = 16 * 60 + 31; // 16:31 → 991 分鐘
 
     if (endMinutes >= threshold) {
         endMinutes += 30; // 再加半小時
@@ -190,8 +191,11 @@
         let endTime = calculateEndTime("16:06", overtime);
         record = `姓名：方建豪\n日期：${date}\n時間：06:55-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：F18/有\n製番：8D01250\n工作內容：SI`;
       } else if (mode === "on site") {
-        let endTime = calculateEndTime("16:36", overtime);
-        record = `姓名：方建豪\n日期：${date}\n時間：07:25-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：F18/有\n製番：8D01250\n工作內容：SI`;
+        let endTime = calculateEndTime("16:06", overtime);
+        record = `姓名：方建豪\n日期：${date}\n時間：06:55-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：F18/有\n製番：8D01250\n工作內容：SI`;
+      } else if (mode === "F18P9") {
+        let endTime = calculateEndTime("16:06", overtime);
+        record = `姓名：方建豪\n日期：${date}\n時間：06:55-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：F18P9/有\n製番：8D01250\n工作內容：SI`;  
       } else if (mode === "AP8") {
         let endTime = calculateEndTime("16:06", overtime);
         record = `姓名：方建豪\n日期：${date}\n時間：06:55-${endTime}(指紋機時間)\n加班時間：${overtime}\n出工地點(有無進工務所)：AP8/有\n製番：8D01250\n工作內容：SI`;
